@@ -23,6 +23,7 @@ namespace LGMonitorControl
         {
             InitializeComponent();
 
+            
             _monitorManager = new MonitorManager();
             _monitorManager.Initialize();
 
@@ -42,16 +43,23 @@ namespace LGMonitorControl
             
         }
 
+        
+
         private void LoadSettings()
         {
-            this.WindowState = FormWindowState.Minimized;
-
+            Settings.RegisterInStartup(true);
+            
+            
             foreach (MonitorData monitor in monitors)
             {
                 comboBox_Monitors.Items.Add(monitor);
             }
 
             comboBox_Monitors.SelectedIndex = 1;
+
+            
+            this.WindowState = FormWindowState.Minimized;
+            
         }
 
         private void comboBox_Monitors_SelectedIndexChanged(object sender, EventArgs e)
@@ -105,14 +113,20 @@ namespace LGMonitorControl
         {
             if (this.WindowState == FormWindowState.Minimized)
             {
-                Hide();
+                //Hide();
+                notifyIcon1.Visible = true;
+                this.ShowInTaskbar = false;
             }
+
         }
 
         private void notifyIcon1_MouseClick(object sender, MouseEventArgs e)
         {
-            Show();
+            //Show();
             this.WindowState = FormWindowState.Normal;
+            this.ShowInTaskbar = true;
+            notifyIcon1.Visible = false;
+
         }
     }
 }

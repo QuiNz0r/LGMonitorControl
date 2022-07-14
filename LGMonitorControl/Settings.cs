@@ -16,11 +16,11 @@ namespace LGMonitorControl
                     ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
             if (isChecked)
             {
-                registryKey.SetValue("ApplicationName", Application.ExecutablePath);
+                registryKey.SetValue("LGMonitorControl", Application.ExecutablePath);
             }
             else
             {
-                registryKey.DeleteValue("ApplicationName");
+                registryKey.DeleteValue("LGMonitorControl");
             }
         }
     }
