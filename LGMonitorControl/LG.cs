@@ -1,28 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace LGMonitorControl
 {
     public static class LG
     {
-        public static class VCPCodes
+        public static class GameMode
         {
-            public static class GameMode
+            public const byte VCP = 0x15;
+            public static Modes currentMode = Modes.None;
+            public enum Modes
             {
-                public const byte VCP = 0x15;
-
-                public static int currentMode = -1;
-                public const int SRGB = 15;
-                public const int FPS = 30;
-
-                
+                None = 0,
+                Gamer1 = 45,
+                Gamer2 = 46,
+                FPS = 30,
+                RTS = 31,
+                VIVID = 49,
+                READER = 1,
+                HDR = 39,
+                SRGB = 15,
             }
 
-
-
+                
         }
+
+
     }
 }

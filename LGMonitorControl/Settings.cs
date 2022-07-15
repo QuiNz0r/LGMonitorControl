@@ -10,6 +10,8 @@ namespace LGMonitorControl
 {
     public static class Settings
     {
+        public static LG.GameMode.Modes DefaultMode { get; set; } = LG.GameMode.Modes.SRGB;
+        
         public static void RegisterInStartup(bool isChecked)
         {
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey
@@ -23,5 +25,14 @@ namespace LGMonitorControl
                 registryKey.DeleteValue("LGMonitorControl");
             }
         }
+    }
+
+    public class ApplicationData
+    {
+        public string WindowName { get; set; }
+
+        public LG.GameMode.Modes GameMode { get; set; }
+
+
     }
 }

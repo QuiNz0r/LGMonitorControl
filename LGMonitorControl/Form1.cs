@@ -13,10 +13,10 @@ namespace LGMonitorControl
     public partial class Form1 : Form
     {
         public List<MonitorData> monitors = null;
-
+        
+        private List<ApplicationData> _applications = new List<ApplicationData>();
         private MonitorManager _monitorManager;
         private MonitorData _selectedMonitor;
-        private string _appNameToCheck = "EscapeFromTarkov";
 
 
         public Form1()
@@ -38,11 +38,21 @@ namespace LGMonitorControl
         private void Form1_Load(object sender, EventArgs e)
         {
             LoadSettings();
-
-            backgroundWorker1.RunWorkerAsync();
+            LoadDataGridView();
             
+            backgroundWorker1.RunWorkerAsync();
         }
 
+        private void LoadDataGridView()
+        {
+            
+            _applications.Add(new ApplicationData() { WindowName = "EscapeFromTarkov", GameMode = LG.GameMode.Modes.FPS });
+            _applications.Add(new ApplicationData() { WindowName = "Overwatch", GameMode = LG.GameMode.Modes.READER });
+
+
+
+
+        }
         
 
         private void LoadSettings()
@@ -54,7 +64,6 @@ namespace LGMonitorControl
             {
                 comboBox_Monitors.Items.Add(monitor);
             }
-
             comboBox_Monitors.SelectedIndex = 1;
 
             
@@ -82,38 +91,35 @@ namespace LGMonitorControl
                 }
                 else
                 {
-                    bool running = WindowScanner.CheckForWindowName(_appNameToCheck);
-
-                    if (running)
+                    string currentForegroundWindowName = WindowScanner.GetActiveWindowTitle();
+                    bool foundWindow = false;
+                    
+                    if (currentForegroundWindowName != null)
                     {
-                        if (LG.VCPCodes.GameMode.currentMode != LG.VCPCodes.GameMode.FPS)
+                        foreach (var app in _applications)
                         {
-                            _monitorManager.SetFeatureValue(_selectedMonitor.Ref.hPhysicalMonitor, LG.VCPCodes.GameMode.VCP, LG.VCPCodes.GameMode.FPS);
-                            LG.VCPCodes.GameMode.currentMode = LG.VCPCodes.GameMode.FPS;
+                            if (currentForegroundWindowName.Contains(app.WindowName))
+                            {
+                                foundWindow = true;
+                                _monitorManager.SetGameMode(_selectedMonitor.Ref.hPhysicalMonitor, app.GameMode);
+                                break;
+                            }
+                        }
+
+                        if (!foundWindow)
+                        {
+                            _monitorManager.SetGameMode(_selectedMonitor.Ref.hPhysicalMonitor, Settings.DefaultMode);
                         }
                     }
-                    else
-                    {
-                        if (LG.VCPCodes.GameMode.currentMode != LG.VCPCodes.GameMode.SRGB)
-                        {
-                            _monitorManager.SetFeatureValue(_selectedMonitor.Ref.hPhysicalMonitor, LG.VCPCodes.GameMode.VCP, LG.VCPCodes.GameMode.SRGB);
-                            LG.VCPCodes.GameMode.currentMode = LG.VCPCodes.GameMode.SRGB;
-                        }
-                    }
-
-                    System.Threading.Thread.Sleep(100);
                 }
+                System.Threading.Thread.Sleep(100);
             }
-
-            
-            
         }
 
         private void Form1_Resize(object sender, EventArgs e)
         {
             if (this.WindowState == FormWindowState.Minimized)
             {
-                //Hide();
                 notifyIcon1.Visible = true;
                 this.ShowInTaskbar = false;
             }
@@ -122,11 +128,10 @@ namespace LGMonitorControl
 
         private void notifyIcon1_MouseClick(object sender, MouseEventArgs e)
         {
-            //Show();
             this.WindowState = FormWindowState.Normal;
             this.ShowInTaskbar = true;
             notifyIcon1.Visible = false;
-
         }
+
     }
 }

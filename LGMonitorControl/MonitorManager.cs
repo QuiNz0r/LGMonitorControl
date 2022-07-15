@@ -205,6 +205,17 @@ namespace LGMonitorControl
             //string errorMessage = new Win32Exception(Marshal.GetLastWin32Error()).Message;
         }
 
+        public bool SetGameMode(IntPtr hPhysicalMonitor, LG.GameMode.Modes mode)
+        {
+            if (LG.GameMode.currentMode != mode)
+            {
+                LG.GameMode.currentMode = mode;
+                return SetVCPFeature(hPhysicalMonitor, LG.GameMode.VCP, (uint)mode);
+            }
+            return false;
+            //string errorMessage = new Win32Exception(Marshal.GetLastWin32Error()).Message;
+        }
+
         public void ChangeBrightness(IntPtr hPhysicalMonitor, uint brightness)
         {
             SetFeatureValue(hPhysicalMonitor, SVC_FEATURE__BRIGHTNESS, brightness);
