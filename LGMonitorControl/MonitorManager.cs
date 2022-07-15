@@ -132,26 +132,26 @@ namespace LGMonitorControl
 
             if (EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero, callback, 0))
             {
-                foreach (var m in monitors)
+                foreach (var monitor in monitors)
                 {
                     uint mcount = 0;
-                    if (!GetNumberOfPhysicalMonitorsFromHMONITOR(m.hMonitor, ref mcount))
+                    if (!GetNumberOfPhysicalMonitorsFromHMONITOR(monitor.hMonitor, ref mcount))
                     {
                         throw new Exception("Cannot get monitor count!");
                     }
                     PHYSICAL_MONITOR[] physicalMonitors = new PHYSICAL_MONITOR[mcount];
 
-                    if (!GetPhysicalMonitorsFromHMONITOR(m.hMonitor, mcount, physicalMonitors))
+                    if (!GetPhysicalMonitorsFromHMONITOR(monitor.hMonitor, mcount, physicalMonitors))
                     {
                         throw new Exception("Cannot get phisical monitor handle!");
                     }
 
-                    Debug.WriteLine($"PM:{physicalMonitors.Length}) RECT: T:{m.rect.Top}/L:{m.rect.Left}/R:{m.rect.Right}/B:{m.rect.Bottom}");
+                    Debug.WriteLine($"PM:{physicalMonitors.Length}) RECT: T:{monitor.rect.Top}/L:{monitor.rect.Left}/R:{monitor.rect.Right}/B:{monitor.rect.Bottom}");
 
 
                     this.physicalMonitors.AddRange(physicalMonitors);
 
-                    m.physicalMonitors = physicalMonitors.Select(a => new PhysicalMonitor
+                    monitor.physicalMonitors = physicalMonitors.Select(a => new PhysicalMonitor
                     {
                         DeviceName = a.szPhysicalMonitorDescription,
                         hPhysicalMonitor = a.hPhysicalMonitor
@@ -199,13 +199,13 @@ namespace LGMonitorControl
             //string errorMessage = new Win32Exception(Marshal.GetLastWin32Error()).Message;
         }
 
-        public bool SetFeatureValue(IntPtr hPhysicalMonitor, byte svc_feature, uint newVurrent)
+        private bool SetFeatureValue(IntPtr hPhysicalMonitor, byte svc_feature, uint newVurrent)
         {
             return SetVCPFeature(hPhysicalMonitor, svc_feature, newVurrent);
             //string errorMessage = new Win32Exception(Marshal.GetLastWin32Error()).Message;
         }
 
-        public bool SetGameMode(IntPtr hPhysicalMonitor, LG.GameMode.Modes mode)
+        public bool ChangeGameMode(IntPtr hPhysicalMonitor, LG.GameMode.Modes mode)
         {
             if (LG.GameMode.currentMode != mode)
             {

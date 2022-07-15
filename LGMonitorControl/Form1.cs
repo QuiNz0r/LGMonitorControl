@@ -101,14 +101,14 @@ namespace LGMonitorControl
                             if (currentForegroundWindowName.Contains(app.WindowName))
                             {
                                 foundWindow = true;
-                                _monitorManager.SetGameMode(_selectedMonitor.Ref.hPhysicalMonitor, app.GameMode);
+                                _monitorManager.ChangeGameMode(_selectedMonitor.Ref.hPhysicalMonitor, app.GameMode);
                                 break;
                             }
                         }
 
                         if (!foundWindow)
                         {
-                            _monitorManager.SetGameMode(_selectedMonitor.Ref.hPhysicalMonitor, Settings.DefaultMode);
+                            _monitorManager.ChangeGameMode(_selectedMonitor.Ref.hPhysicalMonitor, Settings.DefaultMode);
                         }
                     }
                 }
