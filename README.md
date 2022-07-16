@@ -6,6 +6,7 @@
 - super fast
 - super lightweight
 - tested on my LG 34" ultrawide gaming monitor (should work for all LG with same modes)
+- put a shortcut in your autostart folder to make it start on boot (registry option triggers a false threat)
 
 If you would like to buy me a coffee for my work: It is greatly appreciated.
 
