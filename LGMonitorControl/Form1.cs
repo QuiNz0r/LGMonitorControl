@@ -139,6 +139,7 @@ namespace LGMonitorControl
             {
                 //notifyIcon1.Visible = true;
                 this.ShowInTaskbar = false;
+                this.Hide();
             }
 
         }
@@ -147,6 +148,8 @@ namespace LGMonitorControl
         {
             this.WindowState = FormWindowState.Normal;
             this.ShowInTaskbar = true;
+            this.Show();
+            this.Activate();
             //notifyIcon1.Visible = false;
         }
 
