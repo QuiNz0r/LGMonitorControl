@@ -10,7 +10,7 @@ namespace LGMonitorControl
 {
     public static class Settings
     {
-        public static LG.GameMode.Modes DefaultMode { get; set; } = LG.GameMode.Modes.SRGB;
+        public static LG.GameMode.Modes DefaultMode { get; set; }
         
         public static void RegisterInStartup(bool isChecked)
         {

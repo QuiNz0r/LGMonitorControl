@@ -239,5 +239,10 @@ namespace LGMonitorControl
                 _applications[e.RowIndex].GameMode = (LG.GameMode.Modes)cb.Value;
             }
         }
+
+        private void comboBox_Defaultmode_SelectedValueChanged(object sender, EventArgs e)
+        {
+            Settings.DefaultMode = (LG.GameMode.Modes)comboBox_Defaultmode.SelectedItem;
+        }
     }
 }

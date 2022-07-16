@@ -145,6 +145,7 @@
             this.comboBox_Defaultmode.Name = "comboBox_Defaultmode";
             this.comboBox_Defaultmode.Size = new System.Drawing.Size(121, 21);
             this.comboBox_Defaultmode.TabIndex = 6;
+            this.comboBox_Defaultmode.SelectedValueChanged += new System.EventHandler(this.comboBox_Defaultmode_SelectedValueChanged);
             // 
             // label1
             // 
