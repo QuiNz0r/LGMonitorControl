@@ -60,29 +60,29 @@ namespace LGMonitorControl
             }
         }
 
-        public void RegisterInStartup(bool isChecked)
-        {
-            RegistryKey registryKey = Registry.CurrentUser.OpenSubKey
-                    ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-            if (isChecked)
-            {
-                registryKey.SetValue("LGMonitorControl", Application.ExecutablePath);
-            }
-            else
-            {
-                registryKey.DeleteValue("LGMonitorControl");
-            }
-        }
+        //public void RegisterInStartup(bool isChecked)
+        //{
+        //    RegistryKey registryKey = Registry.CurrentUser.OpenSubKey
+        //            ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+        //    if (isChecked)
+        //    {
+        //        registryKey.SetValue("LGMonitorControl", Application.ExecutablePath);
+        //    }
+        //    else
+        //    {
+        //        registryKey.DeleteValue("LGMonitorControl");
+        //    }
+        //}
 
-        public bool GetAutostartState()
-        {
-            RegistryKey registryKey = Registry.CurrentUser.OpenSubKey
-                    ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+        //public bool GetAutostartState()
+        //{
+        //    RegistryKey registryKey = Registry.CurrentUser.OpenSubKey
+        //            ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 
-            return registryKey.GetValue("LGMonitorControl") != null;
+        //    return registryKey.GetValue("LGMonitorControl") != null;
 
 
-        }
+        //}
     }
 
     public class ApplicationData

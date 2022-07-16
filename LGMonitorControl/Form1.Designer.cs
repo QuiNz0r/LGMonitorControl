@@ -108,22 +108,23 @@
             // checkBox_Autostart
             // 
             this.checkBox_Autostart.AutoSize = true;
-            this.checkBox_Autostart.Location = new System.Drawing.Point(283, 398);
+            this.checkBox_Autostart.Location = new System.Drawing.Point(253, 398);
             this.checkBox_Autostart.Name = "checkBox_Autostart";
             this.checkBox_Autostart.Size = new System.Drawing.Size(68, 17);
             this.checkBox_Autostart.TabIndex = 4;
             this.checkBox_Autostart.Text = "Autostart";
             this.checkBox_Autostart.UseVisualStyleBackColor = true;
+            this.checkBox_Autostart.Visible = false;
             this.checkBox_Autostart.CheckedChanged += new System.EventHandler(this.checkBox_Autostart_CheckedChanged);
             // 
             // checkBox_Minimized
             // 
             this.checkBox_Minimized.AutoSize = true;
-            this.checkBox_Minimized.Location = new System.Drawing.Point(357, 398);
+            this.checkBox_Minimized.Location = new System.Drawing.Point(327, 398);
             this.checkBox_Minimized.Name = "checkBox_Minimized";
-            this.checkBox_Minimized.Size = new System.Drawing.Size(72, 17);
+            this.checkBox_Minimized.Size = new System.Drawing.Size(97, 17);
             this.checkBox_Minimized.TabIndex = 5;
-            this.checkBox_Minimized.Text = "Minimized";
+            this.checkBox_Minimized.Text = "Start Minimized";
             this.checkBox_Minimized.UseVisualStyleBackColor = true;
             this.checkBox_Minimized.CheckedChanged += new System.EventHandler(this.checkBox_Minimized_CheckedChanged);
             // 

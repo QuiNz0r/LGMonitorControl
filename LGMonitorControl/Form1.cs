@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LGMonitorControl
@@ -52,7 +49,7 @@ namespace LGMonitorControl
             checkBox_Minimized.Checked = Settings.Instance.StartMinimized;
             comboBox_Defaultmode.DataSource = Enum.GetValues(typeof(LG.GameMode.Modes));
             comboBox_Defaultmode.SelectedItem = Settings.Instance.DefaultMode;
-            checkBox_Autostart.Checked = Settings.Instance.GetAutostartState();
+            //checkBox_Autostart.Checked = Settings.Instance.GetAutostartState();
         }
         
         private void LoadDataGridView()
@@ -165,14 +162,14 @@ namespace LGMonitorControl
 
         private void checkBox_Autostart_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox_Autostart.Checked)
-            {
-                Settings.Instance.RegisterInStartup(true);
-            }
-            else
-            {
-                Settings.Instance.RegisterInStartup(false);
-            }
+            //if (checkBox_Autostart.Checked)
+            //{
+            //    Settings.Instance.RegisterInStartup(true);
+            //}
+            //else
+            //{
+            //    Settings.Instance.RegisterInStartup(false);
+            //}
         }
 
         private void checkBox_Minimized_CheckedChanged(object sender, EventArgs e)
