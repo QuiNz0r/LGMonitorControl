@@ -25,6 +25,16 @@ namespace LGMonitorControl
                 registryKey.DeleteValue("LGMonitorControl");
             }
         }
+
+        public static bool GetAutostartState()
+        {
+            RegistryKey registryKey = Registry.CurrentUser.OpenSubKey
+                    ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+
+            return registryKey.GetValue("LGMonitorControl") != null;
+
+
+        }
     }
 
     public class ApplicationData
@@ -33,6 +43,10 @@ namespace LGMonitorControl
 
         public LG.GameMode.Modes GameMode { get; set; }
 
-
+        public ApplicationData(string windowName, LG.GameMode.Modes gameMode)
+        {
+            WindowName = windowName;
+            GameMode = gameMode;
+        }
     }
 }

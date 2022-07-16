@@ -6,10 +6,9 @@ namespace LGMonitorControl
         public static class GameMode
         {
             public const byte VCP = 0x15;
-            public static Modes currentMode = Modes.None;
+            public static Modes currentMode;
             public enum Modes
             {
-                None = 0,
                 Gamer1 = 45,
                 Gamer2 = 46,
                 FPS = 30,

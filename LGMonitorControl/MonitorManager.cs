@@ -139,6 +139,7 @@ namespace LGMonitorControl
                     {
                         throw new Exception("Cannot get monitor count!");
                     }
+
                     PHYSICAL_MONITOR[] physicalMonitors = new PHYSICAL_MONITOR[mcount];
 
                     if (!GetPhysicalMonitorsFromHMONITOR(monitor.hMonitor, mcount, physicalMonitors))
@@ -214,6 +215,15 @@ namespace LGMonitorControl
             }
             return false;
             //string errorMessage = new Win32Exception(Marshal.GetLastWin32Error()).Message;
+        }
+        
+        public bool GetCurrentGameMode(IntPtr hPhysicalMonitor, out LG.GameMode.Modes currentMode)
+        {
+            uint mode = 0;
+            bool success = GetFeatureValue(hPhysicalMonitor, LG.GameMode.VCP, ref mode);
+
+            currentMode = (LG.GameMode.Modes)mode;
+            return success;
         }
 
         public void ChangeBrightness(IntPtr hPhysicalMonitor, uint brightness)
