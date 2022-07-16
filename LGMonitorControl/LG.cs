@@ -1,5 +1,4 @@
-﻿
-namespace LGMonitorControl
+﻿namespace LGMonitorControl
 {
     public static class LG
     {
@@ -18,10 +17,6 @@ namespace LGMonitorControl
                 HDR = 39,
                 SRGB = 15,
             }
-
-                
         }
-
-
     }
 }

@@ -30,30 +30,19 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.comboBox_Monitors = new System.Windows.Forms.ComboBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.WindowName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Mode = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.addButton = new System.Windows.Forms.Button();
             this.deleteButton = new System.Windows.Forms.Button();
             this.checkBox_Autostart = new System.Windows.Forms.CheckBox();
             this.checkBox_Minimized = new System.Windows.Forms.CheckBox();
-            this.WindowName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Mode = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.comboBox_Defaultmode = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // comboBox_Monitors
-            // 
-            this.comboBox_Monitors.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_Monitors.FormattingEnabled = true;
-            this.comboBox_Monitors.Location = new System.Drawing.Point(12, 12);
-            this.comboBox_Monitors.Name = "comboBox_Monitors";
-            this.comboBox_Monitors.Size = new System.Drawing.Size(409, 21);
-            this.comboBox_Monitors.TabIndex = 0;
-            this.comboBox_Monitors.SelectedIndexChanged += new System.EventHandler(this.comboBox_Monitors_SelectedIndexChanged);
             // 
             // backgroundWorker1
             // 
@@ -78,9 +67,23 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(409, 281);
             this.dataGridView1.TabIndex = 1;
+            this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
             this.dataGridView1.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseDown);
             this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
             this.dataGridView1.CurrentCellDirtyStateChanged += new System.EventHandler(this.dataGridView1_CurrentCellDirtyStateChanged);
+            // 
+            // WindowName
+            // 
+            this.WindowName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.WindowName.HeaderText = "Window Name";
+            this.WindowName.Name = "WindowName";
+            // 
+            // Mode
+            // 
+            this.Mode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Mode.HeaderText = "Mode";
+            this.Mode.MinimumWidth = 100;
+            this.Mode.Name = "Mode";
             // 
             // addButton
             // 
@@ -124,19 +127,6 @@
             this.checkBox_Minimized.UseVisualStyleBackColor = true;
             this.checkBox_Minimized.CheckedChanged += new System.EventHandler(this.checkBox_Minimized_CheckedChanged);
             // 
-            // WindowName
-            // 
-            this.WindowName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.WindowName.HeaderText = "Window Name";
-            this.WindowName.Name = "WindowName";
-            // 
-            // Mode
-            // 
-            this.Mode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Mode.HeaderText = "Mode";
-            this.Mode.MinimumWidth = 100;
-            this.Mode.Name = "Mode";
-            // 
             // comboBox_Defaultmode
             // 
             this.comboBox_Defaultmode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -145,7 +135,7 @@
             this.comboBox_Defaultmode.Name = "comboBox_Defaultmode";
             this.comboBox_Defaultmode.Size = new System.Drawing.Size(121, 21);
             this.comboBox_Defaultmode.TabIndex = 6;
-            this.comboBox_Defaultmode.SelectedValueChanged += new System.EventHandler(this.comboBox_Defaultmode_SelectedValueChanged);
+            this.comboBox_Defaultmode.SelectionChangeCommitted += new System.EventHandler(this.comboBox_Defaultmode_SelectionChangeCommitted);
             // 
             // label1
             // 
@@ -168,7 +158,6 @@
             this.Controls.Add(this.deleteButton);
             this.Controls.Add(this.addButton);
             this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.comboBox_Monitors);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -176,6 +165,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LGMonitorControl";
             this.TopMost = true;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
@@ -185,8 +175,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.ComboBox comboBox_Monitors;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.DataGridView dataGridView1;

@@ -216,11 +216,41 @@ namespace LGMonitorControl
             return false;
             //string errorMessage = new Win32Exception(Marshal.GetLastWin32Error()).Message;
         }
-        
+
+        public bool ChangeGameMode(List<MonitorData> monitors, LG.GameMode.Modes mode)
+        {
+            if (LG.GameMode.currentMode != mode)
+            {
+                LG.GameMode.currentMode = mode;
+                bool success = false;
+                foreach (MonitorData monitor in monitors)
+                {
+                    success = SetVCPFeature(monitor.Ref.hPhysicalMonitor, LG.GameMode.VCP, (uint)mode);
+                }
+                return success;
+            }
+            return false;
+            //string errorMessage = new Win32Exception(Marshal.GetLastWin32Error()).Message;
+        }
+
         public bool GetCurrentGameMode(IntPtr hPhysicalMonitor, out LG.GameMode.Modes currentMode)
         {
             uint mode = 0;
             bool success = GetFeatureValue(hPhysicalMonitor, LG.GameMode.VCP, ref mode);
+
+            currentMode = (LG.GameMode.Modes)mode;
+            return success;
+        }
+        public bool GetCurrentGameMode(List<MonitorData> monitors, out LG.GameMode.Modes currentMode)
+        {
+            uint mode = 0;
+            bool success = false;
+
+            foreach (MonitorData monitor in monitors)
+            {
+                success = GetFeatureValue(monitor.Ref.hPhysicalMonitor, LG.GameMode.VCP, ref mode);
+                if (success) break;
+            }
 
             currentMode = (LG.GameMode.Modes)mode;
             return success;

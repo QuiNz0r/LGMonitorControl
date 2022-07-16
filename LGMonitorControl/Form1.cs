@@ -12,12 +12,9 @@ namespace LGMonitorControl
 {
     public partial class Form1 : Form
     {
-        public List<MonitorData> monitors = null;
-        
-        private BindingList<ApplicationData> _applications = new BindingList<ApplicationData>();
-        private MonitorManager _monitorManager;
-        private MonitorData _selectedMonitor;
 
+        private MonitorManager _monitorManager;
+        private List<MonitorData> _monitors = new List<MonitorData>();
 
         public Form1()
         {
@@ -27,33 +24,42 @@ namespace LGMonitorControl
             _monitorManager = new MonitorManager();
             _monitorManager.Initialize();
 
-            monitors = _monitorManager.Monitors
+            _monitors = _monitorManager.Monitors
                 .SelectMany(a => a.physicalMonitors.Select(b => new MonitorData(b, a.rect)))
                 .OrderBy(r => r.PositionX)
                 .ToList();
-
             
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             LoadSettings();
             LoadDataGridView();
-            
+
             backgroundWorker1.RunWorkerAsync();
         }
+        private void LoadSettings()
+        {
+            Settings.Instance.Load();
 
+            if (_monitorManager.GetCurrentGameMode(_monitors, out LG.GameMode.Modes mode))
+            {
+                LG.GameMode.currentMode = mode;
+            }
+
+            if (Settings.Instance.StartMinimized) this.WindowState = FormWindowState.Minimized;
+            checkBox_Minimized.Checked = Settings.Instance.StartMinimized;
+            comboBox_Defaultmode.DataSource = Enum.GetValues(typeof(LG.GameMode.Modes));
+            comboBox_Defaultmode.SelectedItem = Settings.Instance.DefaultMode;
+            checkBox_Autostart.Checked = Settings.Instance.GetAutostartState();
+        }
+        
         private void LoadDataGridView()
         {
-            _applications.Add(new ApplicationData("EscapeFromTarkov", LG.GameMode.Modes.FPS));
-            _applications.Add(new ApplicationData("Overwatch", LG.GameMode.Modes.VIVID));
-            _applications.Add(new ApplicationData("Notepad", LG.GameMode.Modes.READER));
-
-            comboBox_Monitors.SelectionLength = 0;
-
             dataGridView1.AutoGenerateColumns = false;
             dataGridView1.RowHeadersVisible = false;
-            dataGridView1.DataSource = _applications;
+            dataGridView1.DataSource = Settings.Instance.Applications;
             dataGridView1.EditMode = DataGridViewEditMode.EditOnKeystroke;
             
             WindowName.DataPropertyName = "WindowName";
@@ -63,61 +69,30 @@ namespace LGMonitorControl
             Mode.DataPropertyName = "GameMode";
 
 
-            comboBox_Defaultmode.DataSource = Enum.GetValues(typeof(LG.GameMode.Modes));
         }
 
         private void AddNewApplication()
         {
             ApplicationData newApp = new ApplicationData("<Enter Window Name>", LG.GameMode.Modes.SRGB);
-            _applications.Add(newApp);
+            Settings.Instance.Applications.Add(newApp);
         }
 
         private void RemoveApplication()
         {
-            if (_applications.Count > 0)
+            if (Settings.Instance.Applications.Count > 0)
             {
                 try
                 {
-                    _applications.RemoveAt(dataGridView1.CurrentCell.RowIndex);
+                    Settings.Instance.Applications.RemoveAt(dataGridView1.CurrentCell.RowIndex);
                 }
                 catch
                 {
-                    _applications.RemoveAt(0);
+                    Settings.Instance.Applications.RemoveAt(0);
                 }
             }
         }
 
-        private void LoadSettings()
-        {
-            checkBox_Autostart.Checked = Settings.GetAutostartState();
 
-            
-            foreach (MonitorData monitor in monitors)
-            {
-                comboBox_Monitors.Items.Add(monitor);
-            }
-            
-            comboBox_Monitors.SelectedIndex = 1;
-
-            if (_selectedMonitor != null)
-            {
-                if(_monitorManager.GetCurrentGameMode(_selectedMonitor.Ref.hPhysicalMonitor, out LG.GameMode.Modes mode))
-                {
-                    LG.GameMode.currentMode = mode;
-                }
-                
-            }
-
-            if (checkBox_Minimized.Checked) this.WindowState = FormWindowState.Minimized;
-            
-        }
-
-        private void comboBox_Monitors_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (comboBox_Monitors.SelectedItem == null) return;
-
-            _selectedMonitor = (MonitorData)comboBox_Monitors.SelectedItem;
-        }
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -135,21 +110,22 @@ namespace LGMonitorControl
                     string currentForegroundWindowName = WindowScanner.GetActiveWindowTitle();
                     bool foundWindow = false;
                     
-                    if (currentForegroundWindowName != null && _selectedMonitor != null)
+                    if (currentForegroundWindowName != null && _monitors != null && _monitors.Count > 0)
                     {
-                        foreach (var app in _applications)
+                        foreach (var app in Settings.Instance.Applications)
                         {
                             if (currentForegroundWindowName.Contains(app.WindowName))
                             {
                                 foundWindow = true;
-                                _monitorManager.ChangeGameMode(_selectedMonitor.Ref.hPhysicalMonitor, app.GameMode);
+
+                                _monitorManager.ChangeGameMode(_monitors, app.GameMode);
                                 break;
                             }
                         }
 
                         if (!foundWindow)
                         {
-                            _monitorManager.ChangeGameMode(_selectedMonitor.Ref.hPhysicalMonitor, Settings.DefaultMode);
+                            _monitorManager.ChangeGameMode(_monitors, Settings.Instance.DefaultMode);
                         }
                     }
                 }
@@ -188,17 +164,18 @@ namespace LGMonitorControl
         {
             if (checkBox_Autostart.Checked)
             {
-                Settings.RegisterInStartup(true);
+                Settings.Instance.RegisterInStartup(true);
             }
             else
             {
-                Settings.RegisterInStartup(false);
+                Settings.Instance.RegisterInStartup(false);
             }
         }
 
         private void checkBox_Minimized_CheckedChanged(object sender, EventArgs e)
         {
-
+            Settings.Instance.StartMinimized = checkBox_Minimized.Checked;
+            Settings.Instance.Save();
         }
 
         private void dataGridView1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
@@ -235,14 +212,25 @@ namespace LGMonitorControl
             if (cb.Value != null)
             {
                 dataGridView1.Invalidate();
-                Console.WriteLine(cb.Value);
-                _applications[e.RowIndex].GameMode = (LG.GameMode.Modes)cb.Value;
+                Settings.Instance.Applications[e.RowIndex].GameMode = (LG.GameMode.Modes)cb.Value;
             }
         }
 
-        private void comboBox_Defaultmode_SelectedValueChanged(object sender, EventArgs e)
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Settings.DefaultMode = (LG.GameMode.Modes)comboBox_Defaultmode.SelectedItem;
+            Settings.Instance.Save();
+        }
+
+        private void comboBox_Defaultmode_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            Settings.Instance.DefaultMode = (LG.GameMode.Modes)comboBox_Defaultmode.SelectedItem;
+            Settings.Instance.Save();
+        }
+
+        private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            Settings.Instance.Save();
         }
     }
 }
